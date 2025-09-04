@@ -7,10 +7,11 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import random
 import datetime
+import os
 
 #---Naukri Credentials---
-UN = 'abhinav.banerjee2003@gmail.com' #Username
-PW = '23.Sep.2003'
+UN =  os.getenv("USERNAME") #Username
+PW = os.getenv("PASSWORD") #Password
 
 # --- Day-wise Profile Summaries (Mon → Sun) ---
 SUMMARIES = {
@@ -97,3 +98,4 @@ if __name__ == "__main__":
 
     
         
+
