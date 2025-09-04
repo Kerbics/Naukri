@@ -22,9 +22,9 @@ jobs:
       run: |
         pip install -r requirements.txt
         sudo apt-get update
-        sudo apt-get install -y wget unzip xvfb libxi6 libgconf-2-4 \
-                                libnss3 libxss1 libasound2 fonts-liberation \
-                                libappindicator1 libatk-bridge2.0-0 libgtk-3-0
+        # Minimal dependencies for Chrome on Ubuntu 22.04+
+        sudo apt-get install -y wget unzip xvfb libxi6 libnss3 libxss1 \
+                                fonts-liberation libatk-bridge2.0-0 libgtk-3-0
         # Install latest Google Chrome
         wget -q -O google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
         sudo dpkg -i google-chrome-stable.deb || sudo apt-get -f install -y
