@@ -27,7 +27,7 @@ SUMMARIES = {
     Adept in statistical analysis, predictive modeling, and visualization. Experienced with Python, SQL, 
     and real-world projects. Looking to contribute as a Data Analyst / Data Scientist.""",
 
-    3: """Enthusiastic Computer Science professional with strong analytical and technical skills. 
+    3: """ It' working - Enthusiastic Computer Science professional with strong analytical and technical skills. 
     Specializing in AI, ML, and data-driven solutions. Hands-on experience in Python, SQL, and visualization tools. 
     Eager to apply knowledge in data science and machine learning roles.""",
 
@@ -103,5 +103,6 @@ if __name__ == "__main__":
 
     
         
+
 
 
