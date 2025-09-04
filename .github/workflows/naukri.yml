@@ -1,9 +1,9 @@
-name: Daily Naukri Update (Robust)
+name: Daily Naukri Update
 
 on:
   schedule:
-    - cron: "30 13 * * *"   # 3:30 UTC = 9:00 AM IST
-  workflow_dispatch:        # allow manual trigger
+    - cron: "30 3 * * *"   # Runs daily at 3:30 UTC = 9:00 AM IST
+  workflow_dispatch:        # allows manual trigger
 
 jobs:
   update-naukri:
@@ -22,26 +22,11 @@ jobs:
       run: |
         pip install -r requirements.txt
         sudo apt-get update
-        sudo apt-get install -y wget unzip xvfb libxi6 libgconf-2-4 \
-                                libnss3 libxss1 libasound2 fonts-liberation \
-                                libappindicator1 libatk-bridge2.0-0 libgtk-3-0
-        # Install latest Chrome
-        wget -q -O google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        sudo dpkg -i google-chrome-stable.deb || sudo apt-get -f install -y
-        # Install latest ChromeDriver
-        LATEST=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
-        wget -N https://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/local/bin/
-        sudo chmod +x /usr/local/bin/chromedriver
-        google-chrome-stable --version
-        chromedriver --version
+        sudo apt-get install -y chromium-browser chromium-chromedriver
+        which chromedriver
 
     - name: Run Naukri Update Script
       env:
         NAUKRI_USER: ${{ secrets.NAUKRI_USER }}
         NAUKRI_PASS: ${{ secrets.NAUKRI_PASS }}
-      run: |
-        export DISPLAY=:99
-        nohup Xvfb :99 -screen 0 1920x1080x24 &
-        python naukri_update.py
+      run: python naukri_update.py
