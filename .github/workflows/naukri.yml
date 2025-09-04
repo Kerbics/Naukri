@@ -2,7 +2,7 @@ name: Daily Naukri Update (Robust)
 
 on:
   schedule:
-    - cron: "30 3 * * *"   # 3:30 UTC = 9:00 AM IST
+    - cron: "30 13 * * *"   # 3:30 UTC = 9:00 AM IST
   workflow_dispatch:        # allow manual trigger
 
 jobs:
