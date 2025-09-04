@@ -2,8 +2,8 @@ name: Daily Naukri Update (Robust)
 
 on:
   schedule:
-    - cron: "30 3 * * *"   # Runs daily at 3:30 UTC = 9:00 AM IST
-  workflow_dispatch:        # allows manual trigger
+    - cron: "30 3 * * *"
+  workflow_dispatch:
 
 jobs:
   update-naukri:
@@ -11,25 +11,34 @@ jobs:
 
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3.5.3
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v4.7.0
       with:
         python-version: "3.10"
+
+    - name: Show Python & pip version
+      run: |
+        python --version
+        pip --version
+
+    - name: Cache pip
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - name: Install dependencies
       run: |
         set -e
         pip install -r requirements.txt
         sudo apt-get update
-        # Minimal dependencies for Chrome on Ubuntu 22.04+
-        sudo apt-get install -y wget unzip xvfb libxi6 libnss3 libxss1 \
-                                fonts-liberation libatk-bridge2.0-0 libgtk-3-0
-        # Install latest Google Chrome
+        sudo apt-get install -y wget unzip xvfb libxi6 libnss3 libxss1 fonts-liberation libatk-bridge2.0-0 libgtk-3-0
         wget -q -O google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
         sudo dpkg -i google-chrome-stable.deb || sudo apt-get -f install -y
-        # Install matching ChromeDriver
         LATEST=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
         wget -N https://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
         unzip chromedriver_linux64.zip
@@ -49,10 +58,14 @@ jobs:
 
     - name: Upload screenshot if failure
       if: failure()
-      run: |
-        if [ -f error_screenshot.png]; then
-          echo "Uploading screenshot" 
       uses: actions/upload-artifact@v4
       with:
         name: error-screenshot
         path: error_screenshot.png
+
+    - name: Upload error log if failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: error-log
+        path: error.log
