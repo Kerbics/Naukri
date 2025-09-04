@@ -72,6 +72,8 @@ def update_naukri_profile():
 
         #Step 2: Enter login details
         log("Filling login form...")
+        if not UN or not PW:
+            raise ValueError("❌ Naukri credentials not set in environment variables")
         driver.find_element(By.ID, 'usernameField').send_keys(UN)
         driver.find_element(By.ID, 'passwordField').send_keys(PW)
         driver.find_element(By.XPATH, "//button[text()='Login']").click()
@@ -107,13 +109,24 @@ def update_naukri_profile():
 
     except Exception as e:
         log(f"❌ ERROR: {e}")
-        # Save a screenshot for debugging
-        screenshot_path = "error_screenshot.png"
-        driver.save_screenshot(screenshot_path)
-        log(f"Screenshot saved to {screenshot_path}")
+        # Save screenshot
+        try:
+            if 'driver' in locals():
+                driver.save_screenshot("error_screenshot.png")
+                log("Screenshot saved as error_screenshot.png")
+        except Exception as ss_e:
+            log(f"⚠️ Failed to take screenshot: {ss_e}")
+
+        # Save full traceback to error.log
+        with open("error.log", "w") as f:
+            f.write(traceback.format_exc())
+        log("Error details written to error.log")
+
+        raise  # re-throw to make workflow fail
         
     finally:
-        driver.quit()
+        if 'driver' in locals():
+            driver.quit()
 
 
 
@@ -123,6 +136,7 @@ if __name__ == "__main__":
 
     
         
+
 
 
 
