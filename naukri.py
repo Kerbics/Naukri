@@ -44,39 +44,52 @@ SUMMARIES = {
     and advancing as a Data Scientist or Analyst."""
 }
 
+def log(msg: str):
+    """Prints a clean, prefixed log for Github Actions output"""
+    print(f"[NAUKRI-BOT] {msg}")
+
 def update_naukri_profile():
     #Setup Chrome
     today = datetime.datetime.today().weekday()
     new_summary = SUMMARIES[today]
-    
+
+    log("Starting Chrome setup...")
     options = webdriver.ChromeOptions()
+    options.binary_location = "/usr/bin/google-chrome-stable" #explicit path for GitHub Actions
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    
     driver = webdriver.Chrome(options = options)
+    log("Chrome launched succefffully ✅")
     #options.add_argument('--start-maximized')
     #driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = options)
 
     try:
         #Step 1: Open Naukri
+        log("Opening Naukri login page...")
         driver.get('https://www.naukri.com/nlogin/login')
 
         #Step 2: Enter login details
+        log("Filling login form...")
         driver.find_element(By.ID, 'usernameField').send_keys(UN)
         driver.find_element(By.ID, 'passwordField').send_keys(PW)
         driver.find_element(By.XPATH, "//button[text()='Login']").click()
         time.sleep(5)
 
         #Step 3: Go to profile page
+        log("Navigating to profile page...")
         driver.get('https://www.naukri.com/mnjuser/profile')
         time.sleep(5)
 
-        #step 4: Update Profile
+        #step 4: Edit Profile Summary
+        log("Clicking edit button...")
         edit_button = driver.find_element(By.XPATH, "//h1[contains(text(), 'Profile Summary')]/span[@class='new-pencil']")
         edit_button.click()
         time.sleep(3)
 
         #Step 5: clear old summary and add new one
+        log("Updating summary text...")
         ta = driver.find_element(By.TAG_NAME, 'textarea')
         ta.clear()
         #ta.send_keys(Keys.CONTROL + "a")
@@ -84,14 +97,21 @@ def update_naukri_profile():
         ta.send_keys(new_summary)
 
         #Step 6: Save Changes
+         log("Saving changes...")
         save_button = driver.find_element(By.XPATH, "//button[text()='Save']")
         save_button.click()
         time.sleep(3)
 
-        print('✅ Profile summary updated successfully!')
+        log("Profile summary updated successfully ✅")
+        log(f"Today's Summary: {new_summary}")
 
     except Exception as e:
-        print('❌ Error:', e)
+        log(f"❌ ERROR: {e}")
+        # Save a screenshot for debugging
+        screenshot_path = "error_screenshot.png"
+        driver.save_screenshot(screenshot_path)
+        log(f"Screenshot saved to {screenshot_path}")
+        
     finally:
         driver.quit()
 
@@ -103,6 +123,7 @@ if __name__ == "__main__":
 
     
         
+
 
 
 
