@@ -20,6 +20,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        set -e
         pip install -r requirements.txt
         sudo apt-get update
         # Minimal dependencies for Chrome on Ubuntu 22.04+
@@ -48,6 +49,9 @@ jobs:
 
     - name: Upload screenshot if failure
       if: failure()
+      run: |
+        if [ -f error_screenshot.png]; then
+          echo "Uploading screenshot" 
       uses: actions/upload-artifact@v4
       with:
         name: error-screenshot
