@@ -10,8 +10,8 @@ import datetime
 import os
 
 #---Naukri Credentials---
-UN =  os.getenv("USERNAME") #Username
-PW = os.getenv("PASSWORD") #Password
+UN = os.getenv("NAUKRI_USER") #Username
+PW = os.getenv("NAUKRI_PASS") #Password
 
 # --- Day-wise Profile Summaries (Mon → Sun) ---
 SUMMARIES = {
@@ -50,8 +50,12 @@ def update_naukri_profile():
     new_summary = SUMMARIES[today]
     
     options = webdriver.ChromeOptions()
-    options.add_argument('--start-maximized')
-    driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = options)
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(options = options)
+    #options.add_argument('--start-maximized')
+    #driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = options)
 
     try:
         #Step 1: Open Naukri
@@ -74,8 +78,9 @@ def update_naukri_profile():
 
         #Step 5: clear old summary and add new one
         ta = driver.find_element(By.TAG_NAME, 'textarea')
-        ta.send_keys(Keys.CONTROL + "a")
-        ta.send_keys(Keys.DELETE)
+        ta.clear()
+        #ta.send_keys(Keys.CONTROL + "a")
+        #ta.send_keys(Keys.DELETE)
         ta.send_keys(new_summary)
 
         #Step 6: Save Changes
@@ -98,4 +103,5 @@ if __name__ == "__main__":
 
     
         
+
 
