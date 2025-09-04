@@ -62,6 +62,7 @@ jobs:
       with:
         name: error-screenshot
         path: error_screenshot.png
+        if-no-files-found: ignore
 
     - name: Upload error log if failure
       if: failure()
@@ -69,3 +70,4 @@ jobs:
       with:
         name: error-log
         path: error.log
+        if-no-files-found: ignore
