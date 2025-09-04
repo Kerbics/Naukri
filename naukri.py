@@ -60,11 +60,12 @@ def update_naukri_profile():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     
-    driver = webdriver.Chrome(options = options)
+    #driver = webdriver.Chrome(options = options)
+    driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = options)
+
     log("Chrome launched succefffully ✅")
     #options.add_argument('--start-maximized')
-    #driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = options)
-
+    
     try:
         #Step 1: Open Naukri
         log("Opening Naukri login page...")
@@ -136,6 +137,7 @@ if __name__ == "__main__":
 
     
         
+
 
 
 
