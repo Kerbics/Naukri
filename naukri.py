@@ -99,7 +99,7 @@ def update_naukri_profile():
         ta.send_keys(new_summary)
 
         #Step 6: Save Changes
-         log("Saving changes...")
+        log("Saving changes...")
         save_button = driver.find_element(By.XPATH, "//button[text()='Save']")
         save_button.click()
         time.sleep(3)
@@ -136,6 +136,7 @@ if __name__ == "__main__":
 
     
         
+
 
 
 
