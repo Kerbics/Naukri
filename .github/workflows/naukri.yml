@@ -44,7 +44,7 @@ jobs:
       run: |
         export DISPLAY=:99
         nohup Xvfb :99 -screen 0 1920x1080x24 &
-        python naukri_update.py
+        python naukri.py
 
     - name: Upload screenshot if failure
       if: failure()
