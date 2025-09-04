@@ -4,10 +4,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 import time
 import random
 import datetime
 import os
+
+
 
 #---Naukri Credentials---
 UN = os.getenv("NAUKRI_USER") #Username
@@ -71,13 +77,34 @@ def update_naukri_profile():
         log("Opening Naukri login page...")
         driver.get('https://www.naukri.com/nlogin/login')
 
+        wait = WebDriverWait(driver, 15)
+        
         #Step 2: Enter login details
         log("Filling login form...")
         if not UN or not PW:
             raise ValueError("❌ Naukri credentials not set in environment variables")
-        driver.find_element(By.ID, 'usernameField').send_keys(UN)
+        '''driver.find_element(By.ID, 'usernameField').send_keys(UN)
         driver.find_element(By.ID, 'passwordField').send_keys(PW)
-        driver.find_element(By.XPATH, "//button[text()='Login']").click()
+        driver.find_element(By.XPATH, "//button[text()='Login']").click()'''
+
+        current_url = driver.current_url
+
+        if "nlogin/login" in current_url:
+            username = wait.until(EC.presence_of_element_located((By.ID, "usernameField")))
+            password = wait.until(EC.presence_of_element_located((By.ID, "passwordField")))
+        elif "nLogin/Login.php" in current_url:
+            username = wait.until(EC.presence_of_element_located((By.ID, "emailTxt")))
+            password = wait.until(EC.presence_of_element_located((By.ID, "pwd1")))
+        else:
+            raise RuntimeError(f"Unexpected login page encountered: {current_url}")
+
+        username.send_keys(UN)
+        password.send_keys(PW)
+
+        # Wait for login button
+        login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Login']")))
+        login_button.click()
+        
         time.sleep(5)
 
         #Step 3: Go to profile page
@@ -137,6 +164,7 @@ if __name__ == "__main__":
 
     
         
+
 
 
 
