@@ -61,14 +61,14 @@ def update_naukri_profile():
 
     log("Starting Chrome setup...")
     options = webdriver.ChromeOptions()
-    #options.binary_location = "/usr/bin/google-chrome-stable" #explicit path for GitHub Actions
+    options.binary_location = "/usr/bin/chromium" #explicit path for GitHub Actions
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
-    #options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-dev-shm-usage")
     
     #driver = webdriver.Chrome(options = options)
     #driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = options)
-    service = Service("/usr/bin/chromedriver")
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service = service, options=options)
     
     log("Chrome launched succefffully ✅")
@@ -166,6 +166,7 @@ if __name__ == "__main__":
 
     
         
+
 
 
 
