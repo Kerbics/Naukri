@@ -68,8 +68,8 @@ def update_naukri_profile():
     
     #driver = webdriver.Chrome(options = options)
     #driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = options)
-
-    driver = webdriver.Chrome(executable_path = "/usr/bin/chromedriver", options=options)
+    service = Service("/usr/bin/chromedriver")
+    driver = webdriver.Chrome(service = service, options=options)
     
     log("Chrome launched succefffully ✅")
     #options.add_argument('--start-maximized')
@@ -166,6 +166,7 @@ if __name__ == "__main__":
 
     
         
+
 
 
 
